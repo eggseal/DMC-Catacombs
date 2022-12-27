@@ -1,0 +1,5 @@
+name: JasonBourne
+version: 1.0
+main: me.wholesome_seal.jasonbourne.JasonBourne
+api-version: 1.19
+authors: [wholesome_seal]
