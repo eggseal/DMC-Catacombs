@@ -3,7 +3,6 @@ package me.wholesome_seal.jasonbourne.events.onPlayerQuit;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -28,38 +27,27 @@ public class LootManagerQuit implements Listener {
     public void onPlayerQuit(PlayerQuitEvent event) {
         Player player = event.getPlayer();
 
-        System.out.println("PLayer Quit");
-
         boolean onCorrectWorld = this.plugin.isExecutedOnCorrectWorld(player);
-        if (!onCorrectWorld) return;
+        boolean isRunner = this.plugin.currentPlayer.equals(player);
+        if (!(onCorrectWorld && isRunner)) return;
 
         List<String> filteredItems = this.config.getStringList("catacomb-item-filter");
+        ArrayList<ItemStack> prizePoolAditions = new ArrayList<ItemStack>();
 
-        ArrayList<String[]> prizePoolAditions = new ArrayList<String[]>();
         player.getInventory().forEach((ItemStack item) -> {
             if (item == null) return;
             
-            NamespacedKey itemKey = item.getType().getKey();
-            String itemName = itemKey.getNamespace() + ":" + itemKey.getKey();
-            String itemAmount = filteredItems.contains(itemName) ? "0" : Integer.toString(item.getAmount());
+            String itemName = item.getType().getKey().getKey().toUpperCase();
+            if (filteredItems.contains(itemName)) return;
 
-            if (itemAmount.equals("0")) return;
-            String[] newItem = {itemName, itemAmount};
-            prizePoolAditions.add(newItem);
+            prizePoolAditions.add(item);
         });
         player.getInventory().clear();
 
-        String prizePoolPath = "catacomb-prize-pool";
-        List<String[]> prizePool;
+        if (prizePoolAditions.isEmpty()) return;
 
-        try {
-            @SuppressWarnings("unchecked")
-            List<String[]> rawPrizePool = (List<String[]>) this.config.get(prizePoolPath);
-            prizePool = rawPrizePool;
-        } catch (Exception exception) {
-            System.out.println(exception.getMessage());
-            return;
-        }
+        String prizePoolPath = "catacomb-prize-pool";
+        ArrayList<ItemStack> prizePool = this.plugin.getCatacombPrizePool();
 
         prizePool.addAll(prizePoolAditions);
         this.config.set(prizePoolPath, prizePool);

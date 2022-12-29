@@ -3,7 +3,6 @@ package me.wholesome_seal.jasonbourne.events.onPlayerDeath;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -26,43 +25,26 @@ public class LootManagerDeath implements Listener {
     @EventHandler
     public void onPlayerDeath(PlayerDeathEvent event) {
         boolean onCorrectWorld = this.plugin.isExecutedOnCorrectWorld(event.getEntity());
-        if (!onCorrectWorld) return;
+        boolean isRunner = this.plugin.currentPlayer.equals(event.getEntity());
+        if (!(onCorrectWorld && isRunner)) return;
 
         List<String> filteredItems = this.config.getStringList("catacomb-item-filter");
-        List<ItemStack> droppedItems = event.getDrops();
+        ArrayList<ItemStack> droppedItems = (ArrayList<ItemStack>) event.getDrops();
 
-        ArrayList<String[]> prizePoolAditions = new ArrayList<String[]>();
-        for (ItemStack item : droppedItems) {
-            NamespacedKey itemKey = item.getType().getKey();
-            String itemName = itemKey.getNamespace() + ":" + itemKey.getKey();
-            String itemAmount = filteredItems.contains(itemName) ? "0" : Integer.toString(item.getAmount());
+        droppedItems.removeIf((ItemStack item) -> {
+            String itemKey = item.getType().getKey().getKey();
+            return filteredItems.contains(itemKey.toUpperCase());
+        });
 
-            if (itemAmount.equals("0")) continue;
-            String[] newItem = {itemName, itemAmount};
-            prizePoolAditions.add(newItem);
-        }
-
-        if (droppedItems.isEmpty()) {
-            System.out.println("No items to add to the pool.");
-            return;
-        }
-
-        event.getDrops().clear();
+        if (droppedItems.isEmpty()) return;
 
         String prizePoolPath = "catacomb-prize-pool";
-        List<String[]> prizePool;
+        ArrayList<ItemStack> prizePool = this.plugin.getCatacombPrizePool();
 
-        try {
-            @SuppressWarnings("unchecked")
-            List<String[]> rawPrizePool = (List<String[]>) this.config.get(prizePoolPath);
-            prizePool = rawPrizePool;
-        } catch (Exception exception) {
-            System.out.println(exception.getMessage());
-            return;
-        }
-
-        prizePool.addAll(prizePoolAditions);
+        prizePool.addAll(droppedItems);
         this.config.set(prizePoolPath, prizePool);
         this.plugin.saveConfig();
+
+        event.getDrops().clear();
     }
 }
