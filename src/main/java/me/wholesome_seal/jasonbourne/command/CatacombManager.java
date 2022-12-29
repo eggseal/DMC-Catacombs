@@ -1,0 +1,50 @@
+package me.wholesome_seal.jasonbourne.command;
+
+import java.util.HashMap;
+
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandExecutor;
+import org.bukkit.command.CommandSender;
+
+import me.wholesome_seal.jasonbourne.JasonBourne;
+import me.wholesome_seal.jasonbourne.SubCommand;
+import me.wholesome_seal.jasonbourne.command.catacomb.Start;
+import me.wholesome_seal.jasonbourne.command.catacomb.Winner;
+import net.md_5.bungee.api.ChatColor;
+
+public class CatacombManager implements CommandExecutor {
+
+    private JasonBourne plugin;
+    public HashMap<String, SubCommand> subCommands = new HashMap<String, SubCommand>();
+
+    private String name = "catacomb";
+
+    public CatacombManager(JasonBourne plugin) {
+        this.plugin = plugin;
+        this.plugin.getCommand(this.name).setExecutor(this);
+
+        new CatacombCompleter(this.plugin, this.name, this);
+
+        //  SUBCOMMAND REGISTRY
+        new Start(this.plugin, this);
+        new Winner(this.plugin, this);
+    }
+
+    @Override
+    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+        if (args.length == 0) {
+            sender.sendMessage(ChatColor.GREEN + "[Catacomb] " + ChatColor.RED + "Do you are have stupid?");
+            return false;
+        }
+
+        String inputSubCommand = args[0];
+        SubCommand subCommand = this.subCommands.get(inputSubCommand);
+        if (subCommand == null) {
+            sender.sendMessage(ChatColor.GREEN + "[Catacomb] " + ChatColor.RED + "Such subcommand does not exist");
+            return false;
+        }
+
+        return subCommand.execute(sender, args);
+    }
+    
+}

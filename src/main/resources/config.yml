@@ -1,8 +1,9 @@
 # The UUID for the multiverse world the plugin should work in, aka. The Catacombs world
 multiverse-world-UID: ""
 # A list of all the items that should be ignored when adding loot to the reward pool
-# type: "namespace:item_key"
+# type: "ITEM_KEY"
 catacomb-item-filter: []
-# A list of the items that will be offered to the winner of the Catacombs. This list is managed automatically
-# type: ["namespace:item_key", "number(amount)"]
+# A list of items that will always be offered to the winner of the Catacombs. Items are added with a command to this lists
+catacomb-default-prize: []
+# A list of the items added up by Player deaths that will be offered to the winner of the Catacombs. This list is managed automatically
 catacomb-prize-pool: []
