@@ -1,7 +1,13 @@
 package me.wholesome_seal.jasonbourne.command.catacomb;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
+
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.command.BlockCommandSender;
@@ -12,6 +18,9 @@ import org.bukkit.entity.Player;
 import me.wholesome_seal.jasonbourne.JasonBourne;
 import me.wholesome_seal.jasonbourne.SubCommand;
 import me.wholesome_seal.jasonbourne.command.CatacombManager;
+import me.wholesome_seal.jasonbourne.function.DataSetup;
+import me.wholesome_seal.jasonbourne.function.SenderMessage;
+import me.wholesome_seal.jasonbourne.tasks.EndGame;
 
 public class Start implements SubCommand {
     public String name = "start";
@@ -19,7 +28,6 @@ public class Start implements SubCommand {
     public String syntax = "/catacomb start";
 
     private JasonBourne plugin;
-    @SuppressWarnings("unused")
     private FileConfiguration config;
 
     public Start(JasonBourne plugin, CatacombManager manager) {
@@ -32,7 +40,11 @@ public class Start implements SubCommand {
     @Override
     public boolean execute(CommandSender sender, String[] args) {
         if (!(sender instanceof BlockCommandSender)) {
-            sender.sendMessage(ChatColor.GREEN + "[Catacomb] " + ChatColor.RED + "This command must be executed by a command block.");
+            SenderMessage.sendError(sender, "This command must be executed by a command block.");
+            return false;
+        }
+        if (this.plugin.catacombWorld == null) {
+            SenderMessage.sendError(sender, "Failed to resolve the given world in catacomb-world-UID");
             return false;
         }
 
@@ -54,18 +66,54 @@ public class Start implements SubCommand {
         }
 
         if (resultPlayer == null) {
-            String errorMessage = ChatColor.GREEN + "[Catacomb] " + ChatColor.RED + "No avilable player was found.";
-            commandBlock.sendMessage(errorMessage);
+            SenderMessage.sendError(sender, "No avilable player was found.");;
             return false;
         }
 
-        plugin.currentPlayer = resultPlayer;
+        GameMode playerMode = resultPlayer.getGameMode();
+        if (playerMode.equals(GameMode.CREATIVE) || playerMode.equals(GameMode.SPECTATOR)) {
+            String commandLine = "mvtp " + resultPlayer.getName() + " " + plugin.catacombWorld.getName();
+            Bukkit.dispatchCommand(commandBlock, commandLine);
+            return true;
+        }
+
+        if (this.plugin.currentPlayer != null) {
+            String message = "The catacombs are currently occupied by " + this.plugin.currentPlayer.getName() + ", come back later.";
+            SenderMessage.sendPrivate(resultPlayer, message);
+            return false;
+        }
+
+        ArrayList<ArrayList<String>> cooldowns = DataSetup.getPlayersOnCooldown(this.plugin);
+        String playerUID = resultPlayer.getUniqueId().toString();
+        boolean isOnCooldown = cooldowns.stream().anyMatch((ArrayList<String> playerCooldowns) -> {
+            if (playerCooldowns.size() == 0) return false;
+            return playerCooldowns.get(0).equals(playerUID);
+        });
+        if (isOnCooldown) {
+            SenderMessage.sendPrivate(resultPlayer, "You have already wasted your attempt, come back later.");
+            SenderMessage.sendError(sender, "The selected player is on cooldown");
+            return false;
+        }
+
         String commandLine = "mvtp " + resultPlayer.getName() + " " + plugin.catacombWorld.getName();
         Bukkit.dispatchCommand(commandBlock, commandLine);
 
-        String broadcast = resultPlayer.getName() + " has entered the Catacombs";
+        this.plugin.currentPlayer = resultPlayer;
+        int runLength = this.config.getInt("catacomb-run-length");
+        runLength = runLength == 0 ? 3600 : runLength;
+        
+        new EndGame(this.plugin).runTaskLater(this.plugin, (long) runLength * 20);
+
+        String currentTime = String.valueOf(new Date().getTime());
+        List<String> newCooldown = Arrays.asList(playerUID, currentTime);
+        ArrayList<String> newerCooldown = new ArrayList<String>(newCooldown);
+        cooldowns.add(newerCooldown);
+        this.config.set("catacomb-on-cooldown", cooldowns);
+        this.plugin.saveConfig();
+
+        String broadcast = ChatColor.GREEN + resultPlayer.getName() + " has entered the Catacombs";
         Bukkit.broadcastMessage(broadcast);
+        SenderMessage.sendPrivate(resultPlayer, "You now have " + runLength + " seconds to finish the run");
         return true;
     }
-    
 }

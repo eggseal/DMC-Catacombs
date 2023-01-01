@@ -1,8 +1,8 @@
 name: JasonBourne
 version: 1.0
-main: me.eggseal.jasonbourne.JasonBourne
+main: me.wholesome_seal.jasonbourne.JasonBourne
 api-version: 1.19
-authors: [eggseal]
+authors: [wholesome_seal]
 
 commands:
   catacomb:

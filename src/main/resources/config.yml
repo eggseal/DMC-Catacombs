@@ -1,5 +1,19 @@
 # The UUID for the multiverse world the plugin should work in, aka. The Catacombs world
-multiverse-world-UID: ""
+catacomb-world-UID: ""
+# The UUID for the multiverse world that players will get sent to if kicked from the Catacombs
+default-world-UID: ""
+# The amount of time a player has to complete the catacombs in seconds
+# Default value is 3600 (One hour)
+catacomb-run-length: 3600
+# The amount of time a player has to stay in the loot room after defeating the catacombs in seconds
+# Default value is 900 (15 minutes)
+catacomb-loot-length: 900
+# The amount of time a player has to wait in between catacomb run attempts in seconds
+# Default value is 86400 (1 day)
+catacomb-cooldown-length: 86400
+# A list of all players that are currently on run cooldown
+# type: [UUID, 'ms']
+catacomb-on-cooldown: []
 # A list of all the items that should be ignored when adding loot to the reward pool
 # type: "ITEM_KEY"
 catacomb-item-filter: []

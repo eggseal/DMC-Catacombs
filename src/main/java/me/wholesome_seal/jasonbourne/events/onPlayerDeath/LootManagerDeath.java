@@ -10,6 +10,7 @@ import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.inventory.ItemStack;
 
 import me.wholesome_seal.jasonbourne.JasonBourne;
+import me.wholesome_seal.jasonbourne.function.DataSetup;
 
 public class LootManagerDeath implements Listener {
     JasonBourne plugin;
@@ -25,7 +26,7 @@ public class LootManagerDeath implements Listener {
     @EventHandler
     public void onPlayerDeath(PlayerDeathEvent event) {
         boolean onCorrectWorld = this.plugin.isExecutedOnCorrectWorld(event.getEntity());
-        boolean isRunner = this.plugin.currentPlayer.equals(event.getEntity());
+        boolean isRunner = event.getEntity().equals(this.plugin.currentPlayer);
         if (!(onCorrectWorld && isRunner)) return;
 
         List<String> filteredItems = this.config.getStringList("catacomb-item-filter");
@@ -39,7 +40,7 @@ public class LootManagerDeath implements Listener {
         if (droppedItems.isEmpty()) return;
 
         String prizePoolPath = "catacomb-prize-pool";
-        ArrayList<ItemStack> prizePool = this.plugin.getCatacombPrizePool();
+        ArrayList<ItemStack> prizePool = DataSetup.getCatacombPrizePool(this.plugin);
 
         prizePool.addAll(droppedItems);
         this.config.set(prizePoolPath, prizePool);

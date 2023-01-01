@@ -1,6 +1,6 @@
 package me.wholesome_seal.jasonbourne.command.catacomb;
 
-import org.bukkit.ChatColor;
+import org.bukkit.Bukkit;
 import org.bukkit.command.BlockCommandSender;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -9,7 +9,10 @@ import org.bukkit.entity.Player;
 import me.wholesome_seal.jasonbourne.JasonBourne;
 import me.wholesome_seal.jasonbourne.SubCommand;
 import me.wholesome_seal.jasonbourne.command.CatacombManager;
-import me.wholesome_seal.jasonbourne.function.PrizeDisplay;
+import me.wholesome_seal.jasonbourne.function.SenderMessage;
+import me.wholesome_seal.jasonbourne.tasks.EndGame;
+import me.wholesome_seal.jasonbourne.tasks.LootinTime;
+import net.md_5.bungee.api.ChatColor;
 
 public class Winner implements SubCommand {
     public String name = "winner";
@@ -17,7 +20,6 @@ public class Winner implements SubCommand {
     public String syntax = "/catacomb winner";
 
     private JasonBourne plugin;
-    @SuppressWarnings("unused")
     private FileConfiguration config;
 
     public Winner(JasonBourne plugin, CatacombManager manager) {
@@ -31,20 +33,26 @@ public class Winner implements SubCommand {
     public boolean execute(CommandSender sender, String[] args) {
         boolean onCorrectWorld = this.plugin.isExecutedOnCorrectWorld(sender);
         if (!(onCorrectWorld && sender instanceof BlockCommandSender)) {
-            sender.sendMessage(ChatColor.GREEN + "[Catacomb] " + ChatColor.RED + "This command must be executed by a command block.");
+            SenderMessage.sendError(sender, "This command must be executed by a command block.");
             return false;
+        }
+
+        if (EndGame.task != null) {
+            EndGame.task.cancel();
         }
         
-        BlockCommandSender commandBlock = (BlockCommandSender) sender;
         Player player = this.plugin.currentPlayer;
-
         if (player == null) {
-            String errorMessage = "Could not find a valid Player";            
-            commandBlock.sendMessage(ChatColor.GREEN + "[Catacomb] " + ChatColor.RED + errorMessage);
+            SenderMessage.sendError(sender, "Could not find a valid Player");
             return false;
         }
 
-        PrizeDisplay.displayInventory(this.plugin, 0);
+        int lootDuration = this.config.getInt("catacomb-loot-length");
+        lootDuration = lootDuration > 0 ? lootDuration : 900;
+        new LootinTime(this.plugin).runTaskLater(this.plugin, (long) lootDuration * 20);
+        
+        Bukkit.broadcastMessage(ChatColor.GREEN + player.getName() + " has defeated the catacombs");
+        SenderMessage.sendPrivate(player, "You now have " + lootDuration + " seconds to collect your reward");
         return true;
     }
 }

@@ -1,43 +1,47 @@
 package me.wholesome_seal.jasonbourne;
 
-import java.util.ArrayList;
-import java.util.UUID;
-
-import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.command.BlockCommandSender;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import me.wholesome_seal.jasonbourne.command.CatacombManager;
 import me.wholesome_seal.jasonbourne.events.onPlayerDeath.LootManagerDeath;
+import me.wholesome_seal.jasonbourne.events.onPlayerJoin.QuitCatacombsJoin;
 import me.wholesome_seal.jasonbourne.events.onPlayerQuit.LootManagerQuit;
-import me.wholesome_seal.jasonbourne.function.PrizeDisplay;
+import me.wholesome_seal.jasonbourne.events.onPlayerRespawn.QuitCatacombsRespawn;
+import me.wholesome_seal.jasonbourne.function.DataSetup;
+import me.wholesome_seal.jasonbourne.tasks.CooldownManager;
 
 public final class JasonBourne extends JavaPlugin {
     @SuppressWarnings("unused")
     private PluginManager manager;
     private FileConfiguration config;
-
+    
     public Player currentPlayer = null;
     public World catacombWorld = null;
+    public World defaultWorld = null;
+    
+    public ConsoleCommandSender console;
 
     @Override
     public void onEnable() {
         this.manager = getServer().getPluginManager();
         this.config = getConfig();
+        this.console = getServer().getConsoleSender();
 
         this.config.options().copyDefaults();
         saveConfig();
 
-        this.setCatacombWorld();
-
-        //  UILITIES SETUP
-        PrizeDisplay.setup(this);
+        //  SETUP
+        DataSetup.setCatacombWorld(this);
+        DataSetup.setDefaultWorld(this);
+        // new CooldownManager(this).runTaskTimer(this, 0, 18_000);
+        new CooldownManager(this).runTaskTimer(this, 0, 20 * 30);
         
         //  COMMAND REGISTRY
         new CatacombManager(this);
@@ -45,37 +49,16 @@ public final class JasonBourne extends JavaPlugin {
         //  EVENT REGISTRY
         new LootManagerDeath(this);
         new LootManagerQuit(this);
+        new QuitCatacombsJoin(this);
+        new QuitCatacombsRespawn(this);
     }
 
-    private void setCatacombWorld() {
-        String multiverseWorldUID = this.config.getString("multiverse-world-UID");
-        this.catacombWorld = Bukkit.getWorld(UUID.fromString(multiverseWorldUID));
-    }
+    public void sendPlayerToDefault(Player player, boolean playerEnded) {
+        String playerName = player.getName();
+        String command = "mvtp " + playerName + " " + this.defaultWorld.getName();
+        getServer().dispatchCommand(this.console, command);
 
-    public ArrayList<ItemStack> getCatacombPrizePool() {
-        ArrayList<ItemStack> prizePool;
-        try {
-            @SuppressWarnings("unchecked")
-            ArrayList<ItemStack> rawPrizePool = (ArrayList<ItemStack>) this.config.get("catacomb-prize-pool");
-            prizePool = rawPrizePool == null ? new ArrayList<ItemStack>() : rawPrizePool;
-        } catch (Exception exception) {
-            System.out.println(exception.getMessage());
-            return null;
-        }
-        return prizePool;
-    }
-
-    public ArrayList<ItemStack> getCatacombDefaultPrize() {
-        ArrayList<ItemStack> prizePool;
-        try {
-            @SuppressWarnings("unchecked")
-            ArrayList<ItemStack> rawPrizePool = (ArrayList<ItemStack>) this.config.get("catacomb-default-prize");
-            prizePool = rawPrizePool == null ? new ArrayList<ItemStack>() : rawPrizePool;
-        } catch (Exception exception) {
-            System.out.println(exception.getMessage());
-            return null;
-        }
-        return prizePool;
+        if (playerEnded) this.currentPlayer = null;
     }
 
     public boolean isExecutedOnCorrectWorld(CommandSender sender) {
@@ -93,6 +76,7 @@ public final class JasonBourne extends JavaPlugin {
             return false;
         }
 
+        if (this.catacombWorld == null) return false;
         String multiverseWorldUID = this.catacombWorld.getUID().toString();
         String senderWorldUID = senderWorld.getUID().toString();
 

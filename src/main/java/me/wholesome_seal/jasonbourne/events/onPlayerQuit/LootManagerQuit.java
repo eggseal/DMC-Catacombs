@@ -11,6 +11,7 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
 
 import me.wholesome_seal.jasonbourne.JasonBourne;
+import me.wholesome_seal.jasonbourne.function.DataSetup;
 
 public class LootManagerQuit implements Listener {
     JasonBourne plugin;
@@ -28,7 +29,7 @@ public class LootManagerQuit implements Listener {
         Player player = event.getPlayer();
 
         boolean onCorrectWorld = this.plugin.isExecutedOnCorrectWorld(player);
-        boolean isRunner = this.plugin.currentPlayer.equals(player);
+        boolean isRunner = player.equals(this.plugin.currentPlayer);
         if (!(onCorrectWorld && isRunner)) return;
 
         List<String> filteredItems = this.config.getStringList("catacomb-item-filter");
@@ -44,10 +45,11 @@ public class LootManagerQuit implements Listener {
         });
         player.getInventory().clear();
 
+        this.plugin.currentPlayer = null;
         if (prizePoolAditions.isEmpty()) return;
 
         String prizePoolPath = "catacomb-prize-pool";
-        ArrayList<ItemStack> prizePool = this.plugin.getCatacombPrizePool();
+        ArrayList<ItemStack> prizePool = DataSetup.getCatacombPrizePool(this.plugin);
 
         prizePool.addAll(prizePoolAditions);
         this.config.set(prizePoolPath, prizePool);
