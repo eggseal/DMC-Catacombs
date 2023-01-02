@@ -35,13 +35,14 @@ public final class JasonBourne extends JavaPlugin {
         this.console = getServer().getConsoleSender();
 
         this.config.options().copyDefaults();
-        saveConfig();
+        this.saveDefaultConfig();
+        this.reloadConfig();
 
         //  SETUP
+        CustomStorage.setup(this);
         DataSetup.setCatacombWorld(this);
         DataSetup.setDefaultWorld(this);
-        // new CooldownManager(this).runTaskTimer(this, 0, 18_000);
-        new CooldownManager(this).runTaskTimer(this, 0, 20 * 30);
+        new CooldownManager(this).runTaskTimer(this, 0, 600);
         
         //  COMMAND REGISTRY
         new CatacombManager(this);
@@ -55,7 +56,8 @@ public final class JasonBourne extends JavaPlugin {
 
     public void sendPlayerToDefault(Player player, boolean playerEnded) {
         String playerName = player.getName();
-        String command = "mvtp " + playerName + " " + this.defaultWorld.getName();
+        String worldName = this.defaultWorld == null ? "world" : this.defaultWorld.getName();
+        String command = "mvtp " + playerName + " " + worldName;
         getServer().dispatchCommand(this.console, command);
 
         if (playerEnded) this.currentPlayer = null;

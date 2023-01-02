@@ -15,6 +15,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
+import me.wholesome_seal.jasonbourne.CustomStorage;
 import me.wholesome_seal.jasonbourne.JasonBourne;
 import me.wholesome_seal.jasonbourne.SubCommand;
 import me.wholesome_seal.jasonbourne.command.CatacombManager;
@@ -108,8 +109,8 @@ public class Start implements SubCommand {
         List<String> newCooldown = Arrays.asList(playerUID, currentTime);
         ArrayList<String> newerCooldown = new ArrayList<String>(newCooldown);
         cooldowns.add(newerCooldown);
-        this.config.set("catacomb-on-cooldown", cooldowns);
-        this.plugin.saveConfig();
+        CustomStorage.config.set("catacomb-on-cooldown", cooldowns);
+        CustomStorage.save();
 
         String broadcast = ChatColor.GREEN + resultPlayer.getName() + " has entered the Catacombs";
         Bukkit.broadcastMessage(broadcast);

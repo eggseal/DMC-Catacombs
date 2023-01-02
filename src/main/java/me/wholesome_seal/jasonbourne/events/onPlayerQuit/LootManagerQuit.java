@@ -10,6 +10,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
 
+import me.wholesome_seal.jasonbourne.CustomStorage;
 import me.wholesome_seal.jasonbourne.JasonBourne;
 import me.wholesome_seal.jasonbourne.function.DataSetup;
 
@@ -52,7 +53,7 @@ public class LootManagerQuit implements Listener {
         ArrayList<ItemStack> prizePool = DataSetup.getCatacombPrizePool(this.plugin);
 
         prizePool.addAll(prizePoolAditions);
-        this.config.set(prizePoolPath, prizePool);
-        this.plugin.saveConfig();
+        CustomStorage.config.set(prizePoolPath, prizePool);
+        CustomStorage.save();
     }
 }

@@ -3,11 +3,11 @@ package me.wholesome_seal.jasonbourne.tasks;
 import java.util.ArrayList;
 import java.util.Date;
 
-import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 
+import me.wholesome_seal.jasonbourne.CustomStorage;
 import me.wholesome_seal.jasonbourne.JasonBourne;
 import me.wholesome_seal.jasonbourne.function.DataSetup;
 
@@ -28,7 +28,6 @@ public class CooldownManager extends BukkitRunnable {
     @Override
     public void run() {
         ArrayList<ArrayList<String>> cooldowns = DataSetup.getPlayersOnCooldown(this.plugin);
-        Bukkit.broadcastMessage("[Catacombs] Updated cooldowns");
         cooldowns.removeIf((ArrayList<String> cooldown) -> {
             String playerEntry;
             try {
@@ -43,7 +42,7 @@ public class CooldownManager extends BukkitRunnable {
             long passedTime = currentTime - playerEntryTime;
             return passedTime >= cooldownLength;
         });
-        this.plugin.getConfig().set("catacomb-on-cooldown", cooldowns);
-        this.plugin.saveConfig();
+        CustomStorage.config.set("catacomb-on-cooldown", cooldowns);
+        CustomStorage.save();
     }
 }
