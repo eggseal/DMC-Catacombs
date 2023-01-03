@@ -29,6 +29,10 @@ public class DataSetup {
         }
     }
 
+    public static ArrayList<String> getItemFilter(JasonBourne plugin) {
+        return new ArrayList<String>(plugin.getConfig().getStringList("catacomb-item-filter"));
+    }
+
     public static long getCooldownTime(JasonBourne plugin) {
         long cooldownLength = plugin.getConfig().getLong("catacomb-cooldown-length");
         return cooldownLength == 0 ? 86400 : cooldownLength;
@@ -48,11 +52,15 @@ public class DataSetup {
 
     }
 
+    public static ArrayList<String> getEntranceCoordinated(JasonBourne plugin) {
+        return new ArrayList<>(plugin.getConfig().getStringList("catacomb-entrances"));
+    }
+
     public static ArrayList<ItemStack> getCatacombPrizePool(JasonBourne plugin) {
         ArrayList<ItemStack> prizePool;
         try {
             @SuppressWarnings("unchecked")
-            ArrayList<ItemStack> rawPrizePool = (ArrayList<ItemStack>) CustomStorage.config.get("catacomb-default-prize");
+            ArrayList<ItemStack> rawPrizePool = (ArrayList<ItemStack>) CustomStorage.config.get("catacomb-prize-pool");
             prizePool = rawPrizePool == null ? new ArrayList<ItemStack>() : rawPrizePool;
         } catch (Exception exception) {
             System.out.println(exception.getMessage());

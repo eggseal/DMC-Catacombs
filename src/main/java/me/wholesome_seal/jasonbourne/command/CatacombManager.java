@@ -8,6 +8,8 @@ import org.bukkit.command.CommandSender;
 
 import me.wholesome_seal.jasonbourne.JasonBourne;
 import me.wholesome_seal.jasonbourne.SubCommand;
+import me.wholesome_seal.jasonbourne.command.catacomb.DefaultReward;
+import me.wholesome_seal.jasonbourne.command.catacomb.Filter;
 import me.wholesome_seal.jasonbourne.command.catacomb.Start;
 import me.wholesome_seal.jasonbourne.command.catacomb.Winner;
 import net.md_5.bungee.api.ChatColor;
@@ -28,6 +30,8 @@ public class CatacombManager implements CommandExecutor {
         //  SUBCOMMAND REGISTRY
         new Start(this.plugin, this);
         new Winner(this.plugin, this);
+        new Filter(this.plugin, this);
+        new DefaultReward(this.plugin, this);
     }
 
     @Override

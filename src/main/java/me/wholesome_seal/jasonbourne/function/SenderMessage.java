@@ -17,4 +17,11 @@ public class SenderMessage {
         String privateMessage = ChatColor.GREEN + "[Catacombs] " + ChatColor.GRAY + message;
         sender.sendMessage(privateMessage);
     }
+
+    public static void sendSuccess(CommandSender sender, String message) {
+        if (sender == null || message == null) return;
+
+        String succMessage = ChatColor.GREEN + "[Catacombs] " + ChatColor.AQUA + message;
+        sender.sendMessage(succMessage);
+    }
 }

@@ -10,6 +10,10 @@ import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import me.wholesome_seal.jasonbourne.command.CatacombManager;
+import me.wholesome_seal.jasonbourne.events.onBlockBreak.EntranceBreakProtection;
+import me.wholesome_seal.jasonbourne.events.onBlockExplode.EntranceBlockExplodeProtection;
+import me.wholesome_seal.jasonbourne.events.onBlockPlace.EntranceBuildProtection;
+import me.wholesome_seal.jasonbourne.events.onEntityExplode.EntranceExplodeProtection;
 import me.wholesome_seal.jasonbourne.events.onPlayerDeath.LootManagerDeath;
 import me.wholesome_seal.jasonbourne.events.onPlayerJoin.QuitCatacombsJoin;
 import me.wholesome_seal.jasonbourne.events.onPlayerQuit.LootManagerQuit;
@@ -52,6 +56,10 @@ public final class JasonBourne extends JavaPlugin {
         new LootManagerQuit(this);
         new QuitCatacombsJoin(this);
         new QuitCatacombsRespawn(this);
+        new EntranceBreakProtection(this);
+        new EntranceBuildProtection(this);
+        new EntranceExplodeProtection(this);
+        new EntranceBlockExplodeProtection(this);
     }
 
     public void sendPlayerToDefault(Player player, boolean playerEnded) {

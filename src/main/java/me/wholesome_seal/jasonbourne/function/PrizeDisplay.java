@@ -42,8 +42,8 @@ public class PrizeDisplay {
     }
 
     public static void displayInventory(JasonBourne plugin, int page) {
-        ArrayList<ItemStack> defaultItemList = plugin.getCatacombDefaultPrize();
-        ArrayList<ItemStack> itemList = plugin.getCatacombPrizePool();
+        ArrayList<ItemStack> defaultItemList = DataSetup.getDefaultPrizePool(plugin);
+        ArrayList<ItemStack> itemList = DataSetup.getCatacombPrizePool(plugin);
 
         ArrayList<ItemStack> fullItemList = new ArrayList<ItemStack>();
         fullItemList.addAll(defaultItemList);

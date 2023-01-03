@@ -11,6 +11,12 @@ catacomb-loot-length: 900
 # The amount of time a player has to wait in between catacomb run attempts in seconds
 # Default value is 86400 (1 day)
 catacomb-cooldown-length: 86400
+# The radius of block protection around the entrace coordinates given on catacomb-entrances
+catacomb-entrance-protection-radius: 15
+# A list of all the coordinates where a catacomb entrance is placed.
+# All blocks within the catacomb-entrance-protection radius cannot be destroyed
+# type: List<'X Y Z'>
+catacomb-entrances: []
 # A list of all the items that should be ignored when adding loot to the reward pool
-# type: "ITEM_KEY"
+# type: List<'ITEM_KEY'>
 catacomb-item-filter: []

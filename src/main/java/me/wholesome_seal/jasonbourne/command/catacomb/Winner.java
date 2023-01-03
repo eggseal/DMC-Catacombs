@@ -14,17 +14,17 @@ import me.wholesome_seal.jasonbourne.tasks.EndGame;
 import me.wholesome_seal.jasonbourne.tasks.LootinTime;
 import net.md_5.bungee.api.ChatColor;
 
-public class Winner implements SubCommand {
-    public String name = "winner";
-    public String description = "Display the prize pool GUI to the current Catacombs player";
-    public String syntax = "/catacomb winner";
-
+public class Winner extends SubCommand {
     private JasonBourne plugin;
     private FileConfiguration config;
 
     public Winner(JasonBourne plugin, CatacombManager manager) {
         this.plugin = plugin;
         this.config = plugin.getConfig();
+
+        this.name = "winner";
+        this.description = "Display the prize pool GUI to the current Catacombs player";
+        this.args = null;
 
         manager.subCommands.put(this.name, this);
     }

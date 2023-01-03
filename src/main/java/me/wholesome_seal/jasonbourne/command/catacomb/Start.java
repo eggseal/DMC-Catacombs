@@ -23,17 +23,17 @@ import me.wholesome_seal.jasonbourne.function.DataSetup;
 import me.wholesome_seal.jasonbourne.function.SenderMessage;
 import me.wholesome_seal.jasonbourne.tasks.EndGame;
 
-public class Start implements SubCommand {
-    public String name = "start";
-    public String description = "Send the nearest survival player to the Catacombs and setup all the necessary config";
-    public String syntax = "/catacomb start";
-
+public class Start extends SubCommand {
     private JasonBourne plugin;
     private FileConfiguration config;
 
     public Start(JasonBourne plugin, CatacombManager manager) {
         this.plugin = plugin;
         this.config = plugin.getConfig();
+
+        this.name = "start";
+        this.description = "Send the nearest survival player to the Catacombs and setup all the necessary config";
+        this.args = null;
 
         manager.subCommands.put(this.name, this);
     }
