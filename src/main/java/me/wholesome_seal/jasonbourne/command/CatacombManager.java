@@ -52,8 +52,8 @@ public class CatacombManager implements CommandExecutor {
             return false;
         }
 
-        if (!sender.hasPermission("catacomb.manager")) {
-            SenderMessage.sendError(sender, "Missing permissions: catacombs.manager");
+        if (!sender.hasPermission("earthcatacombs.catacomb")) {
+            SenderMessage.sendError(sender, "Missing permissions: earthcatacombs.catacomb");
             return false;
         }
 

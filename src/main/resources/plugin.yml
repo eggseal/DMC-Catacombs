@@ -7,3 +7,12 @@ authors: [wholesome_seal]
 commands:
   catacomb:
     description: "The manager for the Catacomb plugin commands"
+    permission: earthcatacombs.catacomb
+
+permissions:
+  earthcatacombs.catacomb:
+    description: Permission to run all /catacomb subcommands. Admin command
+  earthcatacombs.*:
+    description: Wildcard permission for all commands
+    children:
+      earthcatacombs.catacomb: true

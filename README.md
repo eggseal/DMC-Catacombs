@@ -19,7 +19,7 @@ Command blocks with these commands are supposed to be setup along the catacomb r
 
 ### Player Only
 
-These commands can only be accessed by players with the `catacomb.manager`/`catacomb.*` permission.
+These commands can only be accessed by players with the `earthcatacombs.catacomb`/`earthcatacombs.*` permission.
 
 - `/catacomb filter <add/remove>` Add/Remove the held item's key to the `item-filter` config value
 - `/catacomb default_reward <add/remove>` Add/Remove the held item to the `default-prize` item list
