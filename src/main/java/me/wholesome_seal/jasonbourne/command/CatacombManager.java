@@ -14,7 +14,7 @@ import me.wholesome_seal.jasonbourne.command.catacomb.End;
 import me.wholesome_seal.jasonbourne.command.catacomb.Filter;
 import me.wholesome_seal.jasonbourne.command.catacomb.Start;
 import me.wholesome_seal.jasonbourne.command.catacomb.Winner;
-import net.md_5.bungee.api.ChatColor;
+import me.wholesome_seal.jasonbourne.function.SenderMessage;
 
 public class CatacombManager implements CommandExecutor {
 
@@ -41,14 +41,19 @@ public class CatacombManager implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (args.length == 0) {
-            sender.sendMessage(ChatColor.GREEN + "[Catacomb] " + ChatColor.RED + "Do you are have stupid?");
+            SenderMessage.sendError(sender, "Do you are have stupid?");
             return false;
         }
 
         String inputSubCommand = args[0];
         SubCommand subCommand = this.subCommands.get(inputSubCommand);
         if (subCommand == null) {
-            sender.sendMessage(ChatColor.GREEN + "[Catacomb] " + ChatColor.RED + "Such subcommand does not exist");
+            SenderMessage.sendError(sender, "Such subcommand does not exist");
+            return false;
+        }
+
+        if (!sender.hasPermission("catacomb.manager")) {
+            SenderMessage.sendError(sender, "Missing permissions: catacombs.manager");
             return false;
         }
 

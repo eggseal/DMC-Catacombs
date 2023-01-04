@@ -50,7 +50,7 @@ public final class JasonBourne extends JavaPlugin {
         DataSetup.setCatacombWorld(this);
         DataSetup.setDefaultWorld(this);
         PrizeDisplay.setup(this);
-        new CooldownManager(this).runTaskTimer(this, 0, 600);
+        new CooldownManager(this).runTaskTimer(this, 0, 1200);
         
         //  COMMAND REGISTRY
         new CatacombManager(this);
