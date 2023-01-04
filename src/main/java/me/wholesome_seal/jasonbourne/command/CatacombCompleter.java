@@ -40,6 +40,10 @@ public class CatacombCompleter implements TabCompleter {
                 return subCommands.keySet().parallelStream().toList();
             }
             default: {
+                SubCommand subCommand = subCommands.get(args[0]);
+                if (subCommand == null) return new ArrayList<String>();
+                if (subCommand.args == null) return new ArrayList<String>();
+
                 return subCommands.get(args[0]).args.get(argIndex);
             }
         }

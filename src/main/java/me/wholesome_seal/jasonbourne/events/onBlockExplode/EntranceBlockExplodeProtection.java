@@ -30,7 +30,7 @@ public class EntranceBlockExplodeProtection implements Listener {
         if (!onCorrectWorld) return;
 
         ArrayList<String> entranceCoords = DataSetup.getEntranceCoordinated(this.plugin);
-        double entranceProtectionRadius = (double) this.config.getInt("catacomb-entrance-protection-radius");
+        double entranceProtectionRadius = (double) this.config.getInt("entrance-protection-radius");
         for (String coords : entranceCoords) {
             String[] coordsArray = coords.split("\\s+");
             if (coordsArray.length < 3) continue;

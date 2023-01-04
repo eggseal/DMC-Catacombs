@@ -76,7 +76,7 @@ public class Filter extends SubCommand {
                 return false;
             }
         }
-        this.config.set("catacomb-item-filter", itemFilter);
+        this.config.set("item-filter", itemFilter);
         this.plugin.saveConfig();
         return true;
     }

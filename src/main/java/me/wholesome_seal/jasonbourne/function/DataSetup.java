@@ -30,11 +30,11 @@ public class DataSetup {
     }
 
     public static ArrayList<String> getItemFilter(JasonBourne plugin) {
-        return new ArrayList<String>(plugin.getConfig().getStringList("catacomb-item-filter"));
+        return new ArrayList<String>(plugin.getConfig().getStringList("item-filter"));
     }
 
     public static long getCooldownTime(JasonBourne plugin) {
-        long cooldownLength = plugin.getConfig().getLong("catacomb-cooldown-length");
+        long cooldownLength = plugin.getConfig().getLong("cooldown-length");
         return cooldownLength == 0 ? 86400 : cooldownLength;
     }
 
@@ -42,7 +42,7 @@ public class DataSetup {
         ArrayList<ArrayList<String>> cooldowns;
         try {
             @SuppressWarnings("unchecked")
-            ArrayList<ArrayList<String>> cooldownsRaw = (ArrayList<ArrayList<String>>) CustomStorage.config.get("catacomb-on-cooldown");
+            ArrayList<ArrayList<String>> cooldownsRaw = (ArrayList<ArrayList<String>>) CustomStorage.config.get("on-cooldown");
             cooldowns = cooldownsRaw == null ? new ArrayList<ArrayList<String>>() : cooldownsRaw;
         } catch (Exception exception) {
             System.out.println(exception.getMessage());
@@ -53,14 +53,14 @@ public class DataSetup {
     }
 
     public static ArrayList<String> getEntranceCoordinated(JasonBourne plugin) {
-        return new ArrayList<>(plugin.getConfig().getStringList("catacomb-entrances"));
+        return new ArrayList<>(plugin.getConfig().getStringList("entrance-list"));
     }
 
     public static ArrayList<ItemStack> getCatacombPrizePool(JasonBourne plugin) {
         ArrayList<ItemStack> prizePool;
         try {
             @SuppressWarnings("unchecked")
-            ArrayList<ItemStack> rawPrizePool = (ArrayList<ItemStack>) CustomStorage.config.get("catacomb-prize-pool");
+            ArrayList<ItemStack> rawPrizePool = (ArrayList<ItemStack>) CustomStorage.config.get("prize-pool");
             prizePool = rawPrizePool == null ? new ArrayList<ItemStack>() : rawPrizePool;
         } catch (Exception exception) {
             System.out.println(exception.getMessage());
@@ -73,7 +73,7 @@ public class DataSetup {
         ArrayList<ItemStack> prizePool;
         try {
             @SuppressWarnings("unchecked")
-            ArrayList<ItemStack> rawPrizePool = (ArrayList<ItemStack>) CustomStorage.config.get("catacomb-default-prize");
+            ArrayList<ItemStack> rawPrizePool = (ArrayList<ItemStack>) CustomStorage.config.get("default-prize");
             prizePool = rawPrizePool == null ? new ArrayList<ItemStack>() : rawPrizePool;
         } catch (Exception exception) {
             System.out.println(exception.getMessage());

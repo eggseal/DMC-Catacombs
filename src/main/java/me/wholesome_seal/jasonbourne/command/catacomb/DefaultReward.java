@@ -80,7 +80,7 @@ public class DefaultReward extends SubCommand {
             }
         }
         
-        CustomStorage.config.set("catacomb-default-prize", defaultItemList);
+        CustomStorage.config.set("default-prize", defaultItemList);
         CustomStorage.save();
         return true;
     }

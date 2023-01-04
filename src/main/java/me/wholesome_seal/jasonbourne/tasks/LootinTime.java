@@ -8,6 +8,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 
 import me.wholesome_seal.jasonbourne.JasonBourne;
+import me.wholesome_seal.jasonbourne.function.PrizeDisplay;
 import me.wholesome_seal.jasonbourne.function.SenderMessage;
 
 public class LootinTime extends BukkitRunnable {
@@ -16,6 +17,7 @@ public class LootinTime extends BukkitRunnable {
     private FileConfiguration config;
 
     public static BukkitTask task;
+    public static BukkitRunnable runnableTask;
 
     public LootinTime(JasonBourne plugin) {
         this.plugin = plugin;
@@ -24,21 +26,25 @@ public class LootinTime extends BukkitRunnable {
 
     @Override
     public BukkitTask runTaskLater(Plugin plugin, long delay) {
-        EndGame.task = super.runTaskLater(plugin, delay);
+        task = super.runTaskLater(plugin, delay);
+        runnableTask = this;
         return EndGame.task;
     }
     
     @Override
     public void run() {
+        task = null;
+        runnableTask = null;
+        PrizeDisplay.updateConfigPrize();
+
         Player player = this.plugin.currentPlayer;
         if (player == null) return;
 
-        LootinTime.task = null;
         this.plugin.currentPlayer = null;
         String playerName = player.getName();
 
-        if (this.plugin.defaultWorld == null) return;
         SenderMessage.sendPrivate(player, "Your time to collect the loot has ended.");
+        if (this.plugin.defaultWorld == null) return;
 
         String command = "mvtp " + playerName + " " + this.plugin.defaultWorld.getName();
         Bukkit.dispatchCommand(this.plugin.console, command);

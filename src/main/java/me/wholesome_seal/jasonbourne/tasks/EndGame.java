@@ -24,7 +24,7 @@ public class EndGame extends BukkitRunnable {
 
     @Override
     public BukkitTask runTaskLater(Plugin plugin, long delay) {
-        EndGame.task = super.runTaskLater(plugin, delay);
+        task = super.runTaskLater(plugin, delay);
         return EndGame.task;
     }
 
@@ -33,7 +33,7 @@ public class EndGame extends BukkitRunnable {
         Player player = this.plugin.currentPlayer;
         if (player == null) return;
 
-        EndGame.task = null;
+        task = null;
         String playerName = player.getName();
 
         Bukkit.broadcastMessage(ChatColor.RED + playerName + " failed to complete the catacombs");

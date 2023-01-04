@@ -42,7 +42,7 @@ public class CooldownManager extends BukkitRunnable {
             long passedTime = currentTime - playerEntryTime;
             return passedTime >= cooldownLength;
         });
-        CustomStorage.config.set("catacomb-on-cooldown", cooldowns);
+        CustomStorage.config.set("on-cooldown", cooldowns);
         CustomStorage.save();
     }
 }

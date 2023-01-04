@@ -34,9 +34,9 @@ public class CustomStorage {
     }
 
     private static void setDefaults() {
-        config.addDefault("catacomb-on-cooldown", new ArrayList<ArrayList<String>>());
-        config.addDefault("catacomb-default-prize", new ArrayList<ItemStack>());
-        config.addDefault("catacomb-prize-pool", new ArrayList<ItemStack>());
+        config.addDefault("on-cooldown", new ArrayList<ArrayList<String>>());
+        config.addDefault("default-prize", new ArrayList<ItemStack>());
+        config.addDefault("prize-pool", new ArrayList<ItemStack>());
     }
 
     public static void save() {

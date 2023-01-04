@@ -30,7 +30,7 @@ public class LootManagerDeath implements Listener {
         boolean isRunner = event.getEntity().equals(this.plugin.currentPlayer);
         if (!(onCorrectWorld && isRunner)) return;
 
-        List<String> filteredItems = this.config.getStringList("catacomb-item-filter");
+        List<String> filteredItems = this.config.getStringList("item-filter");
         ArrayList<ItemStack> droppedItems = (ArrayList<ItemStack>) event.getDrops();
 
         droppedItems.removeIf((ItemStack item) -> {
@@ -40,11 +40,10 @@ public class LootManagerDeath implements Listener {
 
         if (droppedItems.isEmpty()) return;
 
-        String prizePoolPath = "catacomb-prize-pool";
         ArrayList<ItemStack> prizePool = DataSetup.getCatacombPrizePool(this.plugin);
 
         prizePool.addAll(droppedItems);
-        CustomStorage.config.set(prizePoolPath, prizePool);
+        CustomStorage.config.set("prize-pool", prizePool);
         CustomStorage.save();
 
         event.getDrops().clear();

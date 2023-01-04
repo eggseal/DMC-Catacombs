@@ -97,10 +97,10 @@ public class Start extends SubCommand {
         }
 
         String commandLine = "mvtp " + resultPlayer.getName() + " " + plugin.catacombWorld.getName();
-        Bukkit.dispatchCommand(commandBlock, commandLine);
+        Bukkit.dispatchCommand(this.plugin.console, commandLine);
 
         this.plugin.currentPlayer = resultPlayer;
-        int runLength = this.config.getInt("catacomb-run-length");
+        int runLength = this.config.getInt("run-length");
         runLength = runLength == 0 ? 3600 : runLength;
         
         new EndGame(this.plugin).runTaskLater(this.plugin, (long) runLength * 20);
@@ -109,12 +109,13 @@ public class Start extends SubCommand {
         List<String> newCooldown = Arrays.asList(playerUID, currentTime);
         ArrayList<String> newerCooldown = new ArrayList<String>(newCooldown);
         cooldowns.add(newerCooldown);
-        CustomStorage.config.set("catacomb-on-cooldown", cooldowns);
+        CustomStorage.config.set("on-cooldown", cooldowns);
         CustomStorage.save();
 
         String broadcast = ChatColor.GREEN + resultPlayer.getName() + " has entered the Catacombs";
         Bukkit.broadcastMessage(broadcast);
         SenderMessage.sendPrivate(resultPlayer, "You now have " + runLength + " seconds to finish the run");
+        SenderMessage.sendSuccess(sender, "Sent " + resultPlayer.getName() + " to the catacombs");
         return true;
     }
 }

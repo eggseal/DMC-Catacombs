@@ -9,6 +9,8 @@ import org.bukkit.command.CommandSender;
 import me.wholesome_seal.jasonbourne.JasonBourne;
 import me.wholesome_seal.jasonbourne.SubCommand;
 import me.wholesome_seal.jasonbourne.command.catacomb.DefaultReward;
+import me.wholesome_seal.jasonbourne.command.catacomb.DisplayReward;
+import me.wholesome_seal.jasonbourne.command.catacomb.End;
 import me.wholesome_seal.jasonbourne.command.catacomb.Filter;
 import me.wholesome_seal.jasonbourne.command.catacomb.Start;
 import me.wholesome_seal.jasonbourne.command.catacomb.Winner;
@@ -30,8 +32,10 @@ public class CatacombManager implements CommandExecutor {
         //  SUBCOMMAND REGISTRY
         new Start(this.plugin, this);
         new Winner(this.plugin, this);
+        new End(this.plugin, this);
         new Filter(this.plugin, this);
         new DefaultReward(this.plugin, this);
+        new DisplayReward(this.plugin, this);
     }
 
     @Override
@@ -50,5 +54,4 @@ public class CatacombManager implements CommandExecutor {
 
         return subCommand.execute(sender, args);
     }
-    
 }

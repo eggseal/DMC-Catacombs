@@ -14,11 +14,14 @@ import me.wholesome_seal.jasonbourne.events.onBlockBreak.EntranceBreakProtection
 import me.wholesome_seal.jasonbourne.events.onBlockExplode.EntranceBlockExplodeProtection;
 import me.wholesome_seal.jasonbourne.events.onBlockPlace.EntranceBuildProtection;
 import me.wholesome_seal.jasonbourne.events.onEntityExplode.EntranceExplodeProtection;
+import me.wholesome_seal.jasonbourne.events.onInventoryClick.LootMenuHandler;
 import me.wholesome_seal.jasonbourne.events.onPlayerDeath.LootManagerDeath;
 import me.wholesome_seal.jasonbourne.events.onPlayerJoin.QuitCatacombsJoin;
 import me.wholesome_seal.jasonbourne.events.onPlayerQuit.LootManagerQuit;
+import me.wholesome_seal.jasonbourne.events.onPlayerQuit.PrizePoolUpdate;
 import me.wholesome_seal.jasonbourne.events.onPlayerRespawn.QuitCatacombsRespawn;
 import me.wholesome_seal.jasonbourne.function.DataSetup;
+import me.wholesome_seal.jasonbourne.function.PrizeDisplay;
 import me.wholesome_seal.jasonbourne.tasks.CooldownManager;
 
 public final class JasonBourne extends JavaPlugin {
@@ -46,6 +49,7 @@ public final class JasonBourne extends JavaPlugin {
         CustomStorage.setup(this);
         DataSetup.setCatacombWorld(this);
         DataSetup.setDefaultWorld(this);
+        PrizeDisplay.setup(this);
         new CooldownManager(this).runTaskTimer(this, 0, 600);
         
         //  COMMAND REGISTRY
@@ -54,12 +58,14 @@ public final class JasonBourne extends JavaPlugin {
         //  EVENT REGISTRY
         new LootManagerDeath(this);
         new LootManagerQuit(this);
+        new LootMenuHandler(this);
         new QuitCatacombsJoin(this);
         new QuitCatacombsRespawn(this);
         new EntranceBreakProtection(this);
         new EntranceBuildProtection(this);
         new EntranceExplodeProtection(this);
         new EntranceBlockExplodeProtection(this);
+        new PrizePoolUpdate(this);
     }
 
     public void sendPlayerToDefault(Player player, boolean playerEnded) {

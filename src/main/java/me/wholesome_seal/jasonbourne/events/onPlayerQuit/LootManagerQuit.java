@@ -13,6 +13,7 @@ import org.bukkit.inventory.ItemStack;
 import me.wholesome_seal.jasonbourne.CustomStorage;
 import me.wholesome_seal.jasonbourne.JasonBourne;
 import me.wholesome_seal.jasonbourne.function.DataSetup;
+import me.wholesome_seal.jasonbourne.tasks.EndGame;
 
 public class LootManagerQuit implements Listener {
     JasonBourne plugin;
@@ -31,9 +32,9 @@ public class LootManagerQuit implements Listener {
 
         boolean onCorrectWorld = this.plugin.isExecutedOnCorrectWorld(player);
         boolean isRunner = player.equals(this.plugin.currentPlayer);
-        if (!(onCorrectWorld && isRunner)) return;
+        if (!(onCorrectWorld && isRunner && EndGame.task != null)) return;
 
-        List<String> filteredItems = this.config.getStringList("catacomb-item-filter");
+        List<String> filteredItems = this.config.getStringList("item-filter");
         ArrayList<ItemStack> prizePoolAditions = new ArrayList<ItemStack>();
 
         player.getInventory().forEach((ItemStack item) -> {
@@ -49,11 +50,10 @@ public class LootManagerQuit implements Listener {
         this.plugin.currentPlayer = null;
         if (prizePoolAditions.isEmpty()) return;
 
-        String prizePoolPath = "catacomb-prize-pool";
         ArrayList<ItemStack> prizePool = DataSetup.getCatacombPrizePool(this.plugin);
 
         prizePool.addAll(prizePoolAditions);
-        CustomStorage.config.set(prizePoolPath, prizePool);
+        CustomStorage.config.set("prize-pool", prizePool);
         CustomStorage.save();
     }
 }
