@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
+import org.bukkit.World;
 import org.bukkit.inventory.ItemStack;
 
 import me.wholesome_seal.jasonbourne.CustomStorage;
@@ -11,21 +12,22 @@ import me.wholesome_seal.jasonbourne.JasonBourne;
 
 public class DataSetup {
     public static void setCatacombWorld(JasonBourne plugin) {
-        String multiverseWorldUID = plugin.getConfig().getString("catacomb-world-UID");
-        try {
-            plugin.catacombWorld = Bukkit.getWorld(UUID.fromString(multiverseWorldUID));
-        } catch (Exception exception) {
-            plugin.catacombWorld = null;
-        }
+        plugin.catacombWorld = DataSetup.getWorld(plugin, "catacomb-world-UID");
     }
 
     public static void setDefaultWorld(JasonBourne plugin) {
-        String defaultWorldUID = plugin.getConfig().getString("default-world-UID");
+        plugin.defaultWorld = DataSetup.getWorld(plugin, "default-world-UID");
+    }
+
+    private static World getWorld(JasonBourne plugin, String path) {
+        String worldConfig = plugin.getConfig().getString(path);
         try {
-            plugin.defaultWorld = Bukkit.getWorld(UUID.fromString(defaultWorldUID));
+            UUID worldUUID = UUID.fromString(worldConfig);
+            return Bukkit.getWorld(worldUUID);
         } catch (Exception exception) {
-            System.out.println("[Catacombs] Error: Failed to load default-world-UID. Make sure the UUID its written correctly");
-            plugin.defaultWorld = null;
+            World world = Bukkit.getWorld(worldConfig);
+            if (world == null) System.out.println("[EarthCatacombs] Failed to resolve the world in " + path);
+            return world;
         }
     }
 

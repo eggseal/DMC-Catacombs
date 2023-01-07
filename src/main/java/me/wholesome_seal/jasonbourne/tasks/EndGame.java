@@ -16,6 +16,7 @@ public class EndGame extends BukkitRunnable {
     private FileConfiguration config;
 
     public static BukkitTask task;
+    public static BukkitRunnable instance;
 
     public EndGame(JasonBourne plugin) {
         this.plugin = plugin;
@@ -25,6 +26,7 @@ public class EndGame extends BukkitRunnable {
     @Override
     public BukkitTask runTaskLater(Plugin plugin, long delay) {
         task = super.runTaskLater(plugin, delay);
+        instance = this;
         return EndGame.task;
     }
 

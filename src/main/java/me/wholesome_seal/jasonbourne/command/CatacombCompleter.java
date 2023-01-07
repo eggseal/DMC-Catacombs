@@ -42,9 +42,9 @@ public class CatacombCompleter implements TabCompleter {
             default: {
                 SubCommand subCommand = subCommands.get(args[0]);
                 if (subCommand == null) return new ArrayList<String>();
-                if (subCommand.args == null) return new ArrayList<String>();
+                if (subCommand.args == null || argIndex >= subCommand.args.size()) return new ArrayList<String>();
 
-                return subCommands.get(args[0]).args.get(argIndex);
+                return subCommand.args.get(argIndex);
             }
         }
     }

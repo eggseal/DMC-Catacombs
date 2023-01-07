@@ -3,6 +3,8 @@ package me.wholesome_seal.jasonbourne.events.onPlayerDeath;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -29,6 +31,8 @@ public class LootManagerDeath implements Listener {
         boolean onCorrectWorld = this.plugin.isExecutedOnCorrectWorld(event.getEntity());
         boolean isRunner = event.getEntity().equals(this.plugin.currentPlayer);
         if (!(onCorrectWorld && isRunner)) return;
+
+        Bukkit.broadcastMessage(ChatColor.RED + event.getEntity().getName() + " failed to complete the catacombs");
 
         List<String> filteredItems = this.config.getStringList("item-filter");
         ArrayList<ItemStack> droppedItems = (ArrayList<ItemStack>) event.getDrops();

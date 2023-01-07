@@ -12,6 +12,7 @@ import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.command.BlockCommandSender;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
@@ -40,7 +41,7 @@ public class Start extends SubCommand {
 
     @Override
     public boolean execute(CommandSender sender, String[] args) {
-        if (!(sender instanceof BlockCommandSender)) {
+        if (!(sender instanceof BlockCommandSender || sender instanceof ConsoleCommandSender)) {
             SenderMessage.sendError(sender, "This command must be executed by a command block.");
             return false;
         }
@@ -49,21 +50,28 @@ public class Start extends SubCommand {
             return false;
         }
 
-        BlockCommandSender commandBlock = (BlockCommandSender) sender;
-        World currentWorld = commandBlock.getBlock().getWorld();
-        Location commandBlockLocation = commandBlock.getBlock().getLocation();
-
-        double lastPlayerDistance = Double.MAX_VALUE;
         Player resultPlayer = null;
-
-        for (Player player : currentWorld.getPlayers()) {
-            Location playerLocation = player.getLocation();
-            double playerDistance = playerLocation.distance(commandBlockLocation);
-
-            if (playerDistance < lastPlayerDistance) {
-                lastPlayerDistance = playerDistance;
-                resultPlayer = player;
+        if (sender instanceof BlockCommandSender) {
+            BlockCommandSender commandBlock = (BlockCommandSender) sender;
+            World currentWorld = commandBlock.getBlock().getWorld();
+            Location commandBlockLocation = commandBlock.getBlock().getLocation();
+            double lastPlayerDistance = Double.MAX_VALUE;
+    
+            for (Player player : currentWorld.getPlayers()) {
+                Location playerLocation = player.getLocation();
+                double playerDistance = playerLocation.distance(commandBlockLocation);
+    
+                if (playerDistance < lastPlayerDistance) {
+                    lastPlayerDistance = playerDistance;
+                    resultPlayer = player;
+                }
             }
+        } else if (sender instanceof ConsoleCommandSender) {
+            if (args.length < 2) {
+                SenderMessage.sendError(sender, "Missing arguments. Usage: /catacomb start <player>");
+                return false;
+            }
+            resultPlayer = Bukkit.getPlayer(args[1]);
         }
 
         if (resultPlayer == null) {
@@ -74,7 +82,7 @@ public class Start extends SubCommand {
         GameMode playerMode = resultPlayer.getGameMode();
         if (playerMode.equals(GameMode.CREATIVE) || playerMode.equals(GameMode.SPECTATOR)) {
             String commandLine = "mvtp " + resultPlayer.getName() + " " + plugin.catacombWorld.getName();
-            Bukkit.dispatchCommand(commandBlock, commandLine);
+            Bukkit.dispatchCommand(this.plugin.console, commandLine);
             return true;
         }
 
